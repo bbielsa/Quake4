@@ -2588,6 +2588,11 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 		viewModel->PostGUIEvent ( "weapon_noammo" );
 	}
 	
+	// BGB7 BEGIN
+	spread = 4.0f;
+	gameLocal.Printf("Bullet spread %f", spread);
+	// BGB7 END
+
 	// The attack is either a hitscan or a launched projectile, do that now.
 	if ( !gameLocal.isClient ) {
 		idDict& dict = altAttack ? attackAltDict : attackDict;

@@ -7615,6 +7615,7 @@ void idPlayer::BobCycle( const idVec3 &pushVelocity ) {
 	// increase view bobbing
 	vel *= 10;
 	// BGB7 END
+
 	xyspeed = vel.LengthFast();
 	
 	if ( !physicsObj.HasGroundContacts() || influenceActive == INFLUENCE_LEVEL2 || ( gameLocal.isMultiplayer && spectating ) ) {
