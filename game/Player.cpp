@@ -1101,6 +1101,10 @@ idPlayer::idPlayer() {
 
 	weapon					= NULL;
 
+// BGB7 BEGIN
+	bloodAlcoholContent = 5.0;
+// BGB7 END
+
 	hud						= NULL;
 	mphud					= NULL;
 	objectiveSystem			= NULL;
@@ -9563,6 +9567,11 @@ void idPlayer::Think( void ) {
 		UpdateWeapon();
 	}
 
+// BGB7 BEGIN
+	UpdateBloodAlcoholContent();
+	common->Printf("BAC %f\n", bloodAlcoholContent);
+// BGB7 END
+
 	UpdateAir();
 	
 	UpdateHud();
@@ -14082,3 +14091,11 @@ int idPlayer::CanSelectWeapon(const char* weaponName)
 }
 
 // RITUAL END
+
+// BGB7 BEGIN
+void idPlayer::UpdateBloodAlcoholContent()
+{
+	float updatedBloodAlcoholContent = fmax(bloodAlcoholContent - 0.0007, 0);
+	bloodAlcoholContent = updatedBloodAlcoholContent;
+}
+// BGB7 END

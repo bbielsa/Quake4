@@ -304,6 +304,11 @@ public:
 	int						lastHitTime;			// last time projectile fired by player hit target
 	int						lastSavingThrowTime;	// for the "free miss" effect
 
+// BGB7 BEGIN
+	float					bloodAlcoholContent;
+// BGB7 END
+
+
 	struct playerFlags_s {
 		bool		forward			:1;
 		bool		backward		:1;
@@ -1037,6 +1042,9 @@ private:
 
 	idUserInterface *		ActiveGui( void );
 
+// BGB7 BEGIN
+	void					UpdateBloodAlcoholContent	( void );
+// BGB7 END
 	void					UpdateWeapon				( void );
 	void					UpdateSpectating			( void );
 	void					UpdateAir					( void );

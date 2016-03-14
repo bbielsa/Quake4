@@ -759,9 +759,14 @@ void idPlayerView::RenderPlayerView( idUserInterface *hud ) {
 		if ( player->GetInfluenceMaterial() || player->GetInfluenceEntity() ) {
 			InfluenceVision( hud, view );
 			guiRendered = true;
-		} else if ( g_doubleVision.GetBool() && gameLocal.time < dvFinishTime ) {
-			DoubleVision( hud, view, dvFinishTime - gameLocal.time );
+		} else if (g_doubleVision.GetBool() && gameLocal.time < dvFinishTime) {
+			DoubleVision(hud, view, dvFinishTime - gameLocal.time);
 			guiRendered = false;
+		} else if ( player->bloodAlcoholContent > 0 ) {
+			float intensity = player->bloodAlcoholContent * 10;
+			int offset = intensity + player->bloodAlcoholContent * idMath::Sin(gameLocal.time / 200);
+			DoubleVision(hud, view, offset);
+			
 		} else {
 			SingleView( hud, view, RF_NO_GUI | RF_PRIMARY_VIEW );
 		}
