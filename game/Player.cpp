@@ -7591,7 +7591,7 @@ void idPlayer::CrashLand( const idVec3 &oldOrigin, const idVec3 &oldVelocity ) {
 idPlayer::BobCycle
 ===============
 */
-void idPlayer::BobCycle( const idVec3 &pushVelocity ) {
+void idPlayer::BobCycle(const idVec3 &pushVelocity) {
 	float		bobmove;
 	int			old, deltaTime;
 	idVec3		vel, gravityDir, velocity;
@@ -7608,54 +7608,59 @@ void idPlayer::BobCycle( const idVec3 &pushVelocity ) {
 	//
 	velocity = physicsObj.GetLinearVelocity() - pushVelocity;
 
-	if ( noclip ) {
-		velocity.Zero ( );
+	if (noclip) {
+		velocity.Zero();
 	}
-   
-	gravityDir = physicsObj.GetGravityNormal();
-	vel = velocity - ( velocity * gravityDir ) * gravityDir;
 
-	// BGB7 BEGIN
+	gravityDir = physicsObj.GetGravityNormal();
+	vel = velocity - (velocity * gravityDir) * gravityDir;
+
+// BGB7 BEGIN
 	// increase view bobbing
 	vel *= 10;
-	// BGB7 END
+// BGB7 END
 
 	xyspeed = vel.LengthFast();
-	
-	if ( !physicsObj.HasGroundContacts() || influenceActive == INFLUENCE_LEVEL2 || ( gameLocal.isMultiplayer && spectating ) ) {
+
+	if (!physicsObj.HasGroundContacts() || influenceActive == INFLUENCE_LEVEL2 || (gameLocal.isMultiplayer && spectating)) {
 		// airborne
 		bobCycle = 0;
 		bobFoot = 0;
 		bobfracsin = 0;
- 	} else if ( ( !usercmd.forwardmove && !usercmd.rightmove ) || ( xyspeed <= MIN_BOB_SPEED ) ) {
- 		// start at beginning of cycle again
- 		bobCycle = 0;
- 		bobFoot = 0;
- 		bobfracsin = 0;
-	} else {
-		if ( physicsObj.IsCrouching() ) {
+	}
+	else if ((!usercmd.forwardmove && !usercmd.rightmove) || (xyspeed <= MIN_BOB_SPEED)) {
+		// start at beginning of cycle again
+		bobCycle = 0;
+		bobFoot = 0;
+		bobfracsin = 0;
+	}
+	else {
+
+		if (physicsObj.IsCrouching()) {
 			bobmove = pm_crouchbob.GetFloat();
 			// ducked characters never play footsteps
-		} else {
+
+		}
+		else {
 			// vary the bobbing based on the speed of the player
-			bobmove = pm_walkbob.GetFloat() * ( 1.0f - bobFrac ) + pm_runbob.GetFloat() * bobFrac;
+			bobmove = pm_walkbob.GetFloat() * (1.0f - bobFrac) + pm_runbob.GetFloat() * bobFrac;
 		}
 
 		// check for footstep / splash sounds
 		old = bobCycle;
-		bobCycle = (int)( old + bobmove * gameLocal.GetMSec() ) & 255;
-		bobFoot = ( bobCycle & 128 ) >> 7;
-		bobfracsin = idMath::Fabs( idMath::Sin( ( bobCycle & 127 ) / 127.0 * idMath::PI ) );
+		bobCycle = (int)(old + bobmove * gameLocal.GetMSec()) & 255;
+		bobFoot = (bobCycle & 128) >> 7;
+		bobfracsin = idMath::Fabs(idMath::Sin((bobCycle & 127) / 127.0 * idMath::PI));
 	}
 
 	// calculate angles for view bobbing
 	viewBobAngles.Zero();
 
 	// no view bob at all in MP while zoomed in
-	if( gameLocal.isMultiplayer && IsZoomed() ) {
+	if (gameLocal.isMultiplayer && IsZoomed()) {
 		bobCycle = 0;
 		bobFoot = 0;
-		bobfracsin = 0;	
+		bobfracsin = 0;
 		return;
 	}
 
@@ -7664,7 +7669,7 @@ void idPlayer::BobCycle( const idVec3 &pushVelocity ) {
 	// add angles based on velocity
 	delta = velocity * viewaxis[0];
 	viewBobAngles.pitch += delta * pm_runpitch.GetFloat();
-	
+
 	delta = velocity * viewaxis[1];
 	viewBobAngles.roll -= delta * pm_runroll.GetFloat();
 
@@ -7673,15 +7678,15 @@ void idPlayer::BobCycle( const idVec3 &pushVelocity ) {
 	speed = xyspeed > 200 ? xyspeed : 200;
 
 	delta = bobfracsin * pm_bobpitch.GetFloat() * speed;
-	if ( physicsObj.IsCrouching() ) {
+	if (physicsObj.IsCrouching()) {
 		delta *= 3;		// crouching
 	}
 	viewBobAngles.pitch += delta;
 	delta = bobfracsin * pm_bobroll.GetFloat() * speed;
-	if ( physicsObj.IsCrouching() ) {
+	if (physicsObj.IsCrouching()) {
 		delta *= 3;		// crouching accentuates roll
 	}
-	if ( bobFoot & 1 ) {
+	if (bobFoot & 1) {
 		delta = -delta;
 	}
 	viewBobAngles.roll += delta;
@@ -7689,7 +7694,7 @@ void idPlayer::BobCycle( const idVec3 &pushVelocity ) {
 	// calculate position for view bobbing
 	viewBob.Zero();
 
-	if ( physicsObj.HasSteppedUp() ) {
+	if (physicsObj.HasSteppedUp()) {
 
 		// check for stepping up before a previous step is completed
 		deltaTime = gameLocal.time - stepUpTime;
@@ -9569,7 +9574,7 @@ void idPlayer::Think( void ) {
 
 // BGB7 BEGIN
 	UpdateBloodAlcoholContent();
-	common->Printf("BAC %f\n", bloodAlcoholContent);
+	//common->Printf("BAC %f\n", bloodAlcoholContent);
 // BGB7 END
 
 	UpdateAir();
@@ -10072,13 +10077,24 @@ inflictor, attacker, dir, and point can be NULL for environmental effects
 ============
 */
 void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &dir,
-					   const char *damageDefName, const float damageScale, int location ) {
+					   const char *damageDefName, float damageScale, int location ) {
  	idVec3		kick;
  	int			damage;
  	int			armorSave;
  	int			knockback;
  	idVec3		damage_from;
  	float		attackerPushScale;
+
+
+	//common->Printf("idPlayer::Damage called\n");
+
+// BGB7 BEGIN
+	float drunkDamageModifier = 1 + bloodAlcoholContent;
+	float oldDamageScale = damageScale;
+	damageScale = damageScale / drunkDamageModifier;
+
+	common->Printf("Damage: %f, Modified: %f\n", oldDamageScale, damageScale);
+// BGB7 END
 
 	// RAVEN BEGIN
 	// twhitaker: difficulty levels
@@ -10256,6 +10272,7 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 		}
 	}
 // RAVEN END
+
 
 	// do the damage
 	if ( damage > 0 ) {

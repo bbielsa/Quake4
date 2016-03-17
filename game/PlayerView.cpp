@@ -762,11 +762,12 @@ void idPlayerView::RenderPlayerView( idUserInterface *hud ) {
 		} else if (g_doubleVision.GetBool() && gameLocal.time < dvFinishTime) {
 			DoubleVision(hud, view, dvFinishTime - gameLocal.time);
 			guiRendered = false;
+// BGB7 BEGIN
 		} else if ( player->bloodAlcoholContent > 0 ) {
-			float intensity = player->bloodAlcoholContent * 10;
+			float intensity = (player->bloodAlcoholContent * 10) + 4;
 			int offset = intensity + player->bloodAlcoholContent * idMath::Sin(gameLocal.time / 200);
 			DoubleVision(hud, view, offset);
-			
+// BGB7 END
 		} else {
 			SingleView( hud, view, RF_NO_GUI | RF_PRIMARY_VIEW );
 		}
