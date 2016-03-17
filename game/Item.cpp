@@ -592,6 +592,10 @@ bool idItem::GiveToPlayer( idPlayer *player ) {
 		return player->GiveInventoryItem( &spawnArgs );
 	} 
 	
+// BGB7 BEGIN
+	player->bloodAlcoholContent += 6.0;
+// BGB7 END
+
 	// Handle the special ammo pickup that gives ammo for the weapon the player currently has
 	if ( spawnArgs.GetBool( "item_currentWeaponAmmo" ) ) {
 		const char *ammoName = player->weapon->GetAmmoNameForIndex(player->weapon->GetAmmoType());

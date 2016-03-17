@@ -478,7 +478,7 @@ stateResult_t rvWeaponBlaster::State_Flashlight ( const stateParms_t& parms ) {
 				Flashlight ( false );
 			} else {
 				Flashlight ( true );
-			}
+			}	
 			
 			SetState ( "Idle", 4 );
 			return SRESULT_DONE;
