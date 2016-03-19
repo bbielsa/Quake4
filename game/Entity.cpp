@@ -679,6 +679,11 @@ void idEntity::Spawn( void ) {
 	// precache decls
 	declManager->FindType( DECL_ENTITYDEF, "damage_crush", false, false );
 // RAVEN END
+
+
+// BGB7 BEGIN
+	gameLocal.PlayEffect(spawnArgs, "fx_trail", GetPhysics()->GetOrigin(), axis, true);
+// BGB7 END
 }
 
 /*
