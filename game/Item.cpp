@@ -588,13 +588,17 @@ bool idItem::GiveToPlayer( idPlayer *player ) {
 		return false;
 	}
 
+// BGB7 BEGIN
+	player->bloodAlcoholContent += 2.0;
+	// disable picking up items, but make it disappear anyway
+	return true;
+// BGB7 END
+
 	if ( spawnArgs.GetBool( "inv_carry" ) ) {
 		return player->GiveInventoryItem( &spawnArgs );
 	} 
 	
-// BGB7 BEGIN
-	player->bloodAlcoholContent += 6.0;
-// BGB7 END
+
 
 	// Handle the special ammo pickup that gives ammo for the weapon the player currently has
 	if ( spawnArgs.GetBool( "item_currentWeaponAmmo" ) ) {
