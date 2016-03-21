@@ -590,6 +590,10 @@ bool idItem::GiveToPlayer( idPlayer *player ) {
 
 // BGB7 BEGIN
 	player->bloodAlcoholContent += 2.0;
+
+	// add some blood to the screen
+	player->playerView.AddBloodSpray(4000);
+
 	// disable picking up items, but make it disappear anyway
 	return true;
 // BGB7 END
