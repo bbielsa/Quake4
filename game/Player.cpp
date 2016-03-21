@@ -45,6 +45,11 @@ idCVar net_showPredictionError( "net_showPredictionError", "-1", CVAR_INTEGER | 
 bool g_ObjectiveSystemOpen = false;
 #endif
 
+// BGB7 BEGIN
+idRandom *rng = new idRandom();
+// BGB7 END
+
+
 // distance between ladder rungs (actually is half that distance, but this sounds better)
 const int LADDER_RUNG_DISTANCE = 32;
 
@@ -9576,7 +9581,21 @@ void idPlayer::Think( void ) {
 
 // BGB7 BEGIN
 	UpdateBloodAlcoholContent();
-	//common->Printf("BAC %f\n", bloodAlcoholContent);
+	
+	// Move the players view at random times to simulate stumbling
+	//float r = rand();
+	
+	float r = rng->RandomFloat();
+	common->Printf("%f\n", r);
+	if (bloodAlcoholContent > 0 && r < 0.05) {
+		idVec3 damageDirection(rand() % 100, rand() % 100, rand() % 100);
+		
+		int oldHealth = health;
+		Damage(this, this, damageDirection, "melee_strogg_marine_left", 10, 0);
+		health = oldHealth;
+	}
+
+	//free(&rng);
 // BGB7 END
 
 	UpdateAir();
@@ -10094,8 +10113,12 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 	float drunkDamageModifier = 1 + bloodAlcoholContent;
 	float oldDamageScale = damageScale;
 	damageScale = damageScale / drunkDamageModifier;
-
-	common->Printf("Damage: %f, Modified: %f\n", oldDamageScale, damageScale);
+	/*
+	if (damageDefName != "damage_strogg_marine_bullet") {
+		common->Printf(damageDefName);
+		common->Printf("\n");
+		common->Printf("Damage: %f, Modified: %f\n", oldDamageScale, damageScale);
+	}*/
 // BGB7 END
 
 	// RAVEN BEGIN
@@ -10179,6 +10202,8 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 	}
 
 	knockback *= damageScale;
+	//knockback = 5000;
+	//knockback = 0;
 
 	if ( knockback != 0 && !fl.noknockback ) {
 		if ( !gameLocal.isMultiplayer && attacker == this ) {
@@ -10189,6 +10214,7 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 				attackerPushScale = 1.0f;	
 			} else {
 				// since default attackerDamageScale is 0.5, default attackerPushScale should be 2
+				common->Printf("got here!\n");
 				damageDef->dict.GetFloat( "attackerPushScale", "2", attackerPushScale );
 			}
 		
