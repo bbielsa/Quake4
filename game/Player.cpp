@@ -9583,19 +9583,15 @@ void idPlayer::Think( void ) {
 	UpdateBloodAlcoholContent();
 	
 	// Move the players view at random times to simulate stumbling
-	//float r = rand();
-	
 	float r = rng->RandomFloat();
-	common->Printf("%f\n", r);
-	if (bloodAlcoholContent > 0 && r < 0.05) {
+
+	if (bloodAlcoholContent > 0 && r < 0.01) {
 		idVec3 damageDirection(rand() % 100, rand() % 100, rand() % 100);
 		
 		int oldHealth = health;
 		Damage(this, this, damageDirection, "melee_strogg_marine_left", 10, 0);
 		health = oldHealth;
 	}
-
-	//free(&rng);
 // BGB7 END
 
 	UpdateAir();

@@ -283,7 +283,11 @@ void rvWeaponGauntlet::Attack ( void ) {
 	if ( gameLocal.time > nextAttackTime ) {					
 		if ( ent ) {
 			if ( ent->fl.takedamage ) {
-				float dmgScale = 1.0f;
+// BGB7 BEGIN
+				// increase damage scale based on the owners BAC
+				float dmgScale = 1.0f + owner->bloodAlcoholContent;
+
+// BGB7 END
 				dmgScale *= owner->PowerUpModifier( PMOD_MELEE_DAMAGE );
 				ent->Damage ( owner, owner, playerViewAxis[0], spawnArgs.GetString ( "def_damage" ), dmgScale, 0 );
 				StartSound( "snd_hit", SND_CHANNEL_ANY, 0, false, NULL );
